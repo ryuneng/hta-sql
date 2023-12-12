@@ -56,5 +56,16 @@ WHERE SALARY = (SELECT MIN(SALARY)
                 WHERE DEPARTMENT_ID = 80);
 
 -- 직원들의 급여등급을 계산해서 급여등급별 직원수를 조회해서 급여등급, 직원수를 출력하기
+SELECT G.GRADE 급여등급, COUNT(*) 직원수
+FROM EMPLOYEES E, SALARY_GRADES G
+WHERE E.SALARY >= G.MIN_SALARY AND E.SALARY <= G.MAX_SALARY
+GROUP BY G.GRADE
+ORDER BY 1;
 
 -- 'Neena'와 같은 해에 입사한 직원들의 아이디, 이름, 입사일을 조회하기
+SELECT EMPLOYEE_ID, FIRST_NAME, HIRE_DATE
+FROM EMPLOYEES
+WHERE TO_CHAR(HIRE_DATE, 'YYYY') = (SELECT TO_CHAR(HIRE_DATE, 'YYYY')
+                                    FROM EMPLOYEES
+                                    WHERE FIRST_NAME = 'Neena')
+ORDER BY HIRE_DATE;
