@@ -31,10 +31,10 @@ FROM EMPLOYEES
 GROUP BY JOB_ID;
 
 -- 관리자별(상사)로 담당자는 직원수를 조회해서 관리자 아이디, 직원수를 출력하기
-SELECT M.EMPLOYEE_ID M_ID, COUNT(E.EMPLOYEE_ID) 직원수
-FROM EMPLOYEES E, EMPLOYEES M
-WHERE E.MANAGER_ID = M.EMPLOYEE_ID
-GROUP BY M.EMPLOYEE_ID;
+SELECT MANAGER_ID M_ID, COUNT(*) 직원수
+FROM EMPLOYEES
+WHERE MANAGER_ID IS NOT NULL
+GROUP BY MANAGER_ID;
 
 -- 직원들의 전체 평균급여보다 급여를 적게 받는 직원들의 아이디, 이름, 급여를 출력하기
 SELECT EMPLOYEE_ID, FIRST_NAME, SALARY
@@ -51,9 +51,10 @@ WHERE SALARY > (SELECT AVG(SALARY)*2
 -- 80번 부서에 근무하고, 80번 부서의 최저급여와 동일한 급여를 받는 직원의 아이디, 이름, 직종, 급여를 조회하기
 SELECT EMPLOYEE_ID, FIRST_NAME, JOB_ID, SALARY
 FROM EMPLOYEES
-WHERE SALARY = (SELECT MIN(SALARY)
-                FROM EMPLOYEES
-                WHERE DEPARTMENT_ID = 80);
+WHERE DEPARTMENT_ID = 80
+AND SALARY = (SELECT MIN(SALARY)
+              FROM EMPLOYEES
+              WHERE DEPARTMENT_ID = 80);
 
 -- 직원들의 급여등급을 계산해서 급여등급별 직원수를 조회해서 급여등급, 직원수를 출력하기
 SELECT G.GRADE 급여등급, COUNT(*) 직원수
